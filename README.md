@@ -1,56 +1,57 @@
 # Key Blocker
 
-Phần mềm chặn phím đơn giản cho Windows. Giao diện Tkinter, chạy ngầm dưới system tray, hỗ trợ tự khởi động cùng Windows mà không cần UAC popup.
+A simple Windows tool to block unwanted keys. Tkinter UI, runs in the system tray, supports auto-start with Windows without a UAC prompt.
 
-## Tính năng
+## Features
 
-- Chặn phím tuỳ chọn: phím Windows, Alt, Ctrl, Shift, F1-F12, Caps Lock, ký tự, ...
-- Lưu danh sách phím tự động (`%LOCALAPPDATA%\KeyBlocker\settings.json`)
-- Chạy ngầm dưới system tray (icon 🔒)
-- Tự khởi động cùng Windows qua **Scheduled Task** chạy quyền cao nhất → không bị UAC chặn ở chế độ silent
-- Single-instance: double-click lần 2 sẽ đưa cửa sổ đang chạy hiện lên thay vì spawn bản mới
-- Hotkey thoát khẩn cấp: **Ctrl + Alt + Q**
+- Block any key: Windows, Alt, Ctrl, Shift, F1-F12, Caps Lock, letters, ...
+- Auto-saves the key list (`%LOCALAPPDATA%\KeyBlocker\settings.json`)
+- Runs in the system tray (🔒 icon)
+- Auto-start via a **Scheduled Task** with highest privileges → no UAC prompt in silent mode
+- Single-instance: a second double-click brings the running window to the front instead of spawning a new copy
+- Emergency hotkey: **Ctrl + Alt + Q**
+- Language switcher: English (default) / Vietnamese
 
-## Yêu cầu
+## Requirements
 
 - Windows 10/11
-- Python 3.8+ (nếu chạy từ source)
-- Quyền Administrator (để chặn phím hệ thống như `windows`, `ctrl`, `alt`)
+- Python 3.8+ (only when running from source)
+- Administrator privileges (required to block system keys like `windows`, `ctrl`, `alt`)
 
-## Chạy từ source
+## Run from source
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Click chuột phải `run_key_blocker.bat` → **Run as administrator**, hoặc:
+Right-click `run_key_blocker.bat` → **Run as administrator**, or:
 
 ```bash
 python key_blocker.py
 ```
 
-## Build file .exe
+## Build the .exe
 
 ```bash
 build.bat
 ```
 
-File `KeyBlocker.exe` (~19 MB) sẽ nằm trong `dist/`. Manifest đã nhúng `uac_admin=True` nên tự xin quyền Admin khi double-click.
+`KeyBlocker.exe` (~19 MB) will be in `dist/`. The manifest already embeds `uac_admin=True`, so the .exe self-elevates when double-clicked.
 
-## Cách dùng
+## How to use
 
-1. Chọn phím trong combobox hoặc nhập tay → bấm **➕ Thêm**
-2. Bấm **▶️ BẮT ĐẦU CHẶN**
-3. Đóng cửa sổ (X) → ẩn xuống tray, vẫn chạy nền
-4. Click phải tray icon 🔒 để mở lại / dừng / thoát
+1. Pick a key from the combobox or type one in → click **➕ Add**
+2. Click **▶️ START BLOCKING**
+3. Close the window (X) → minimizes to tray, keeps running in the background
+4. Right-click the tray icon 🔒 to show / stop / quit
 
-Tick **🚀 Tự động khởi động cùng Windows** để Key Blocker tự chạy ẩn và bật chặn ngay khi đăng nhập.
+Tick **🚀 Auto-start with Windows** to make Key Blocker run hidden and start blocking immediately on logon.
 
-## Tài liệu chi tiết
+## Documentation
 
-- [HUONG_DAN.md](HUONG_DAN.md) — Hướng dẫn cho người dùng cuối
-- [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md) — Hướng dẫn build, kiến trúc, xử lý lỗi
+- [USER_GUIDE.md](USER_GUIDE.md) — End-user guide
+- [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md) — Build steps, architecture, troubleshooting
 
 ## License
 
-Free to use - Educational purpose. Tác giả: Vuong.
+Free to use - educational purpose. Author: Vuong.

@@ -34,11 +34,11 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # Không hiện console
+    console=False,  # Hide console window
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    uac_admin=True,  # Yêu cầu quyền admin
+    uac_admin=True,  # Require admin privileges
 )

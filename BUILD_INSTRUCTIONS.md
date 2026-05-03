@@ -1,166 +1,166 @@
-# KEY BLOCKER - Hướng dẫn Build và Cài đặt
+# KEY BLOCKER - Build & Install Guide
 
-## 📋 Yêu cầu
+## 📋 Requirements
 
 - Windows 10/11
-- Python 3.8 trở lên
-- Pip (đi kèm với Python)
+- Python 3.8 or later
+- Pip (bundled with Python)
 
-## 🔧 Cách Build thành file .EXE
+## 🔧 Building the .EXE
 
-### Bước 1: Cài đặt dependencies
+### Step 1: Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Bước 2: Build file .exe
+### Step 2: Build the .exe
 
-Chạy file `build.bat`:
+Run `build.bat`:
 
 ```bash
 build.bat
 ```
 
-Hoặc build thủ công:
+Or build manually:
 
 ```bash
 python -m PyInstaller --clean KeyBlocker.spec
 ```
 
-### Bước 3: Lấy file .exe
+### Step 3: Get the .exe
 
-Sau khi build thành công, file `KeyBlocker.exe` sẽ nằm trong thư mục `dist/`
+After a successful build, `KeyBlocker.exe` will be in the `dist/` folder:
 
 ```
 dist/
-└── KeyBlocker.exe  ← File này (~19 MB)
+└── KeyBlocker.exe  ← This file (~19 MB)
 ```
 
-File .exe đã được nhúng manifest `uac_admin=True`, sẽ tự xin quyền Administrator khi chạy.
+The .exe has `uac_admin=True` embedded in its manifest, so it will request Administrator privileges automatically when launched.
 
-## 📦 Cách cài đặt
+## 📦 Installation
 
-### Cách 1: Chạy trực tiếp
-- Double-click vào `KeyBlocker.exe`
-- Chương trình sẽ tự động yêu cầu quyền Administrator (UAC popup)
+### Option 1: Run directly
+- Double-click `KeyBlocker.exe`
+- The program will request Administrator privileges (UAC popup)
 
-### Cách 2: Copy vào Program Files
-1. Copy file `KeyBlocker.exe` vào `C:\Program Files\KeyBlocker\`
-2. Tạo shortcut trên Desktop nếu cần
+### Option 2: Copy to Program Files
+1. Copy `KeyBlocker.exe` to `C:\Program Files\KeyBlocker\`
+2. Create a Desktop shortcut if desired
 
-## 🚀 Cách sử dụng
+## 🚀 Usage
 
-### Chặn phím
+### Block a key
 
-1. **Chọn phím từ dropdown** hoặc **nhập tên phím** (ví dụ: `windows`, `alt`, `` ` ``)
-2. Click **➕ Thêm** để thêm vào danh sách
-3. Click **▶️ BẮT ĐẦU CHẶN** để kích hoạt
+1. **Pick from the dropdown** or **type a key name** (e.g. `windows`, `alt`, `` ` ``)
+2. Click **➕ Add** to add it to the list
+3. Click **▶️ START BLOCKING** to activate
 
-### Bỏ chặn phím
+### Unblock a key
 
-1. Click vào phím trong danh sách
-2. Click **🗑️ Xóa phím đã chọn**
+1. Select the key in the list
+2. Click **🗑️ Remove selected key**
 
-### 🎯 System Tray (chạy nền)
+### 🎯 System Tray (background mode)
 
-- Chương trình hiển thị **icon 🔒 ở system tray** (góc dưới bên phải taskbar)
-- **Click phải vào icon** để: hiển thị cửa sổ, bắt đầu/dừng chặn, hoặc thoát
-- Đóng cửa sổ (nút X) → tự động ẩn xuống tray (chương trình vẫn chạy nền)
+- The program shows a **🔒 icon in the system tray** (bottom-right of the taskbar)
+- **Right-click the icon** to: show the window, start/stop blocking, or quit
+- Closing the window (X) → automatically minimizes to tray (the program keeps running)
 
-### ✅ Lưu cài đặt tự động
+### ✅ Auto-saved settings
 
-- Danh sách phím đã chọn **tự động lưu** mỗi khi bạn thêm/xóa phím
-- File cấu hình: `%LOCALAPPDATA%\KeyBlocker\settings.json`
-- Mở lại chương trình → danh sách phím **tự động khôi phục**
+- The selected key list is **saved automatically** every time you add/remove a key
+- Config file: `%LOCALAPPDATA%\KeyBlocker\settings.json`
+- Reopen the program → the key list is **restored automatically**
 
-### 🚀 Tự động khởi động cùng Windows
+### 🚀 Auto-start with Windows
 
-Tick vào checkbox **"🚀 Tự động khởi động cùng Windows (chạy nền + tự chặn)"**
+Tick the **"🚀 Auto-start with Windows (background + auto-block)"** checkbox.
 
-Khi bật, mỗi lần Windows khởi động:
-- ✨ Chương trình tự chạy ngầm dưới system tray (không hiện cửa sổ)
-- ✨ Tự động bật chặn các phím đã lưu
-- ✨ **KHÔNG cần** xác nhận UAC mỗi lần đăng nhập
+When enabled, on every Windows boot:
+- ✨ The program starts hidden in the system tray (no window)
+- ✨ Key blocking is enabled automatically for the saved keys
+- ✨ **No** UAC confirmation required on each login
 
-Cơ chế: tạo Scheduled Task `KeyBlocker` (trigger `ONLOGON`, `/RL HIGHEST`) chạy lệnh có flag `--silent`. Vì Task Scheduler hỗ trợ "Run with highest privileges" nên process được elevated trực tiếp mà không cần UAC popup — đây là lý do phải dùng Task Scheduler thay cho Run registry key (Run key không tự nâng quyền, app yêu cầu admin sẽ bị Windows chặn ở silent mode).
+How it works: a Scheduled Task `KeyBlocker` is created (`ONLOGON` trigger, `/RL HIGHEST`) running the executable with the `--silent` flag. Because Task Scheduler supports "Run with highest privileges", the process is elevated directly without a UAC popup — this is why we use Task Scheduler instead of the Run registry key (the Run key does not auto-elevate, so an app requesting admin would be blocked by Windows in silent mode).
 
-Phiên bản cũ dùng Run key sẽ được tự động migrate sang Scheduled Task ở lần đầu chạy app phiên bản mới.
+Older versions that used the Run key are migrated to a Scheduled Task automatically the first time the new version runs.
 
-### 🔒 Chống chạy 2 instance
+### 🔒 Single-instance protection
 
-Chương trình tự kiểm tra qua lock file `%LOCALAPPDATA%\KeyBlocker\instance.lock`:
-- Lần 2 mở thủ công → ghi wake file `instance.wake`, instance đang chạy phát hiện rồi tự hiện cửa sổ (instance 2 thoát im lặng — không có popup)
-- Lần 2 từ silent mode → thoát im lặng
-- Nếu instance trước crash → lock file stale tự động được dọn ở lần chạy kế tiếp (kiểm tra PID còn sống)
+The program enforces single-instance via a lock file at `%LOCALAPPDATA%\KeyBlocker\instance.lock`:
+- Manually opening a second copy → it writes a wake file `instance.wake`; the running instance detects it and brings its window to the front (the second copy exits silently — no popup)
+- A second copy launched in silent mode → exits silently
+- If the previous instance crashed → the stale lock file is cleaned up automatically on the next run (the PID is checked for liveness)
 
-**Lưu ý khi build/test:** sau khi build EXE mới, nếu bản cũ vẫn đang chạy ngầm, double-click EXE mới sẽ chỉ làm bản cũ hiện UI lên (không spawn bản mới). Click chuột phải tray icon → **Thoát** rồi chạy lại EXE mới.
+**Note when building/testing:** after building a new EXE, if the old one is still running in the background, double-clicking the new EXE will only bring the old window to the front (no new copy is spawned). Right-click the tray icon → **Quit**, then launch the new EXE.
 
-### 🆘 Thoát khẩn cấp
+### 🆘 Emergency exit
 
-Nhấn **Ctrl + Alt + Q** để tắt chặn và thoát chương trình ngay lập tức (kể cả khi đang ẩn tray).
+Press **Ctrl + Alt + Q** to disable blocking and quit immediately (even when hidden in the tray).
 
-## 📝 Các phím có thể chặn
+## 📝 Blockable keys
 
-- Phím hệ thống: `windows`, `alt`, `ctrl`, `shift`, `tab`, `esc`, `caps lock`
-- Phím chức năng: `f1`-`f12`
-- Phím chữ: `a`-`z`
-- Phím số: `0`-`9`
-- Phím đặc biệt: `` ` ``, `~`, `-`, `=`, `[`, `]`, `\`, `;`, `'`, `,`, `.`, `/`
-- Phím điều hướng: `up`, `down`, `left`, `right`, `home`, `end`, `page up`, `page down`
-- Khác: `space`, `enter`, `backspace`, `delete`, `insert`, `print screen`
+- System keys: `windows`, `alt`, `ctrl`, `shift`, `tab`, `esc`, `caps lock`
+- Function keys: `f1`-`f12`
+- Letters: `a`-`z`
+- Digits: `0`-`9`
+- Special: `` ` ``, `~`, `-`, `=`, `[`, `]`, `\`, `;`, `'`, `,`, `.`, `/`
+- Navigation: `up`, `down`, `left`, `right`, `home`, `end`, `page up`, `page down`
+- Others: `space`, `enter`, `backspace`, `delete`, `insert`, `print screen`
 
-## ⚙️ Cấu trúc Project
+## ⚙️ Project Structure
 
 ```
 key_blocker/
-├── key_blocker.py          # Source code chính
+├── key_blocker.py          # Main source code
 ├── KeyBlocker.spec         # PyInstaller specification
-├── build.bat               # Build script tự động
-├── run_key_blocker.bat     # Chạy từ source (không cần build)
+├── build.bat               # Automated build script
+├── run_key_blocker.bat     # Run from source (no build required)
 ├── requirements.txt        # Python dependencies
-├── BUILD_INSTRUCTIONS.md   # File này
-├── HUONG_DAN.md            # Hướng dẫn cho người dùng cuối
+├── BUILD_INSTRUCTIONS.md   # This file
+├── USER_GUIDE.md           # End-user guide
 │
-├── build/                  # Thư mục build tạm (tự động tạo, gitignored)
-└── dist/                   # Thư mục chứa file .exe (tự động tạo)
+├── build/                  # Temporary build directory (auto-generated, gitignored)
+└── dist/                   # Output directory for the .exe (auto-generated)
     └── KeyBlocker.exe
 ```
 
-## 🐛 Xử lý lỗi
+## 🐛 Troubleshooting
 
-### Lỗi: "Không thể chặn phím"
-- ✅ Phải chạy với quyền Administrator (file .exe đã tự xin UAC, source mode cần dùng `run_key_blocker.bat`)
-- ✅ Một số phần mềm chống virus có thể chặn keyboard hook → tạm tắt rồi thử lại
+### Error: "Cannot block keys"
+- ✅ Must be run as Administrator (the .exe self-elevates via UAC; running from source requires `run_key_blocker.bat`)
+- ✅ Some antivirus software may block the keyboard hook → disable it temporarily and try again
 
-### Lỗi: "Module 'keyboard' not found"
+### Error: "Module 'keyboard' not found"
 ```bash
 pip install -r requirements.txt
 ```
 
-### Lỗi: `'pyinstaller' is not recognized`
-PyInstaller được cài qua pip nhưng `Scripts/` chưa nằm trong PATH. Dùng:
+### Error: `'pyinstaller' is not recognized`
+PyInstaller is installed via pip, but `Scripts/` isn't on PATH. Use:
 ```bash
 python -m PyInstaller --clean KeyBlocker.spec
 ```
 
-### Lỗi khi build (PYZ/EXE corrupted)
-- Xóa thư mục `build/` và `dist/`
-- Chạy lại `build.bat`
+### Build error (PYZ/EXE corrupted)
+- Delete the `build/` and `dist/` folders
+- Run `build.bat` again
 
-### Chương trình không tự khởi động cùng Windows
-- Vào UI tick lại checkbox "🚀 Tự động khởi động cùng Windows"
-- Kiểm tra Scheduled Task: PowerShell `Get-ScheduledTask -TaskName KeyBlocker` phải tồn tại với State `Ready`
-- Hoặc xem ở **Task Scheduler** (`taskschd.msc`) → tìm task tên `KeyBlocker`
+### The program doesn't auto-start with Windows
+- Re-tick the "🚀 Auto-start with Windows" checkbox in the UI
+- Verify the Scheduled Task: PowerShell `Get-ScheduledTask -TaskName KeyBlocker` should report State `Ready`
+- Or open **Task Scheduler** (`taskschd.msc`) and look for the `KeyBlocker` task
 
 ## 📄 License
 
-Tác giả: Vuong  
-Free to use - Educational purpose
+Author: Vuong
+Free to use - educational purpose
 
-## ⚠️ Lưu ý
+## ⚠️ Notes
 
-- Cần quyền Administrator để chặn phím hệ thống
-- Luôn nhớ phím tắt khẩn cấp: **Ctrl + Alt + Q**
-- Không nên chặn tất cả các phím cùng lúc (sẽ không thể điều khiển máy)
-- Sử dụng có trách nhiệm
+- Administrator privileges are required to block system keys
+- Always remember the emergency shortcut: **Ctrl + Alt + Q**
+- Don't block every key at once (you'll lose control of the machine)
+- Use responsibly

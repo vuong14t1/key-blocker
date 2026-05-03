@@ -4,43 +4,43 @@ echo    KEY BLOCKER - BUILD SCRIPT
 echo ========================================
 echo.
 
-echo [1/4] Kiem tra PyInstaller...
+echo [1/4] Checking PyInstaller...
 pip show pyinstaller >nul 2>&1
 if errorlevel 1 (
-    echo PyInstaller chua duoc cai dat. Dang cai dat...
+    echo PyInstaller is not installed. Installing...
     pip install pyinstaller
 )
 
 echo.
-echo [2/4] Kiem tra keyboard module...
+echo [2/4] Checking keyboard module...
 pip show keyboard >nul 2>&1
 if errorlevel 1 (
-    echo keyboard module chua duoc cai dat. Dang cai dat...
+    echo keyboard module is not installed. Installing...
     pip install keyboard
 )
 
 echo.
-echo [3/4] Xoa thu muc build cu (neu co)...
+echo [3/4] Removing old build directories (if any)...
 if exist build rmdir /s /q build
 if exist dist rmdir /s /q dist
 
 echo.
-echo [4/4] Build file .exe...
+echo [4/4] Building .exe...
 python -m PyInstaller --clean KeyBlocker.spec
 
 echo.
 echo ========================================
 if exist "dist\KeyBlocker.exe" (
-    echo BUILD THANH CONG!
-    echo File .exe tai: dist\KeyBlocker.exe
+    echo BUILD SUCCEEDED!
+    echo .exe location: dist\KeyBlocker.exe
     echo.
-    echo Ban co the:
-    echo - Chay truc tiep: dist\KeyBlocker.exe
-    echo - Tao shortcut tren Desktop
-    echo - Chuyen file nay di bat ky dau
+    echo You can:
+    echo - Run directly: dist\KeyBlocker.exe
+    echo - Create a Desktop shortcut
+    echo - Move the file anywhere you like
 ) else (
-    echo BUILD THAT BAI!
-    echo Vui long kiem tra loi o tren.
+    echo BUILD FAILED!
+    echo Please check the errors above.
 )
 echo ========================================
 echo.

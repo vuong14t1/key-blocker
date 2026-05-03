@@ -1,35 +1,35 @@
 @echo off
 chcp 65001 >nul
-title Key Blocker - Chan Phim
+title Key Blocker
 
 echo ========================================
-echo    KEY BLOCKER - PHAN MEM CHAN PHIM
+echo    KEY BLOCKER - KEY BLOCKING TOOL
 echo ========================================
 echo.
 
-:: Kiem tra Python
+:: Check Python
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo [LOI] Chua cai dat Python!
-    echo Vui long tai Python tai: https://www.python.org/downloads/
+    echo [ERROR] Python is not installed!
+    echo Please download Python from: https://www.python.org/downloads/
     pause
     exit /b 1
 )
 
-:: Kiem tra thu vien keyboard
+:: Check the keyboard library
 python -c "import keyboard" >nul 2>&1
 if errorlevel 1 (
-    echo [INFO] Dang cai dat thu vien keyboard...
+    echo [INFO] Installing the keyboard library...
     pip install keyboard
     if errorlevel 1 (
-        echo [LOI] Khong the cai dat thu vien keyboard
+        echo [ERROR] Failed to install the keyboard library
         pause
         exit /b 1
     )
 )
 
-:: Chay chuong trinh voi quyen admin
-echo [INFO] Dang khoi dong chuong trinh...
+:: Run the program with admin privileges
+echo [INFO] Starting the program...
 echo.
 powershell -Command "Start-Process python -ArgumentList 'key_blocker.py' -Verb RunAs"
 
